@@ -1,0 +1,45 @@
+services:
+  # خدمة البوت (Background Worker)
+  - type: worker
+    name: telegram-extractor-bot
+    runtime: python
+    repo: https://github.com/kingali371/telegram-extractor
+    plan: free
+    branch: main
+    
+    # أمر البناء والتشغيل
+    buildCommand: pip install -r requirements.txt
+    startCommand: python app.py
+    
+    # المتغيرات البيئية
+    envVars:
+      # من my.telegram.org (يتم إدخالها يدوياً)
+      - key: API_ID
+        sync: false
+      - key: API_HASH
+        sync: false
+      
+      # من @BotFather
+      - key: BOT_TOKEN
+        sync: false
+      
+      # من @userinfobot (معرف المالك)
+      - key: OWNER_ID
+        sync: false
+      
+      # أدمن إضافيين (اختياري، افصل بينهم بفواصل)
+      - key: ADMIN_IDS
+        sync: false
+      
+      # متغيرات إضافية
+      - key: PYTHON_VERSION
+        value: 3.11.0
+
+  # (اختياري) خدمة مراقبة صحة البوت
+  - type: cron
+    name: bot-health-check
+    schedule: "*/30 * * * *"  # كل 30 دقيقة
+    command: "curl -s https://api.telegram.org/bot$BOT_TOKEN/getMe || echo 'Bot is down'"
+    envVars:
+      - key: BOT_TOKEN
+        sync: false

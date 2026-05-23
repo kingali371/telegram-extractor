@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.env
+*.session
+*.csv
+*.json
+*.log
+admins.txt
+venv/
+env/
+.venv/
